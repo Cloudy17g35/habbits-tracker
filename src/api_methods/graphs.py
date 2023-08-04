@@ -1,16 +1,11 @@
 import requests
+from src.authentication import get_headers
+from src import endpoints
 
-def create_new_graph(endpoint: str, headers: dict) -> None:
-    """
-    Create a new graph on Pixela.
 
-    Args:
-        endpoint (str): The API endpoint URL for creating a new graph.
-        headers (dict): The request headers including authentication token.
-
-    Returns:
-        None
-    """
+def create_new_graph() -> None:
+    headers = get_headers()
+    endpoint = endpoints.graphs_endpoint
     graph_config = {
         'id': input("Graph ID:> "),
         'name': input("Graph name:> "),
@@ -26,20 +21,8 @@ def create_new_graph(endpoint: str, headers: dict) -> None:
     print(response_text)
 
 
-def get_graphs_data(endpoint: str, headers: dict) -> dict or None:
-    """
-    Retrieve a list of all graphs from Pixela.
-
-    Args:
-        endpoint (str): The API endpoint URL for retrieving all graphs.
-        headers (dict): The request headers including authentication token.
-
-    Returns:
-        dict or None: A dictionary containing information about all graphs,
-                     or None if there was an error in the request.
-    """
+def _get_graphs_data(endpoint, headers) -> dict or None:
     response = requests.get(endpoint, headers=headers)
-
     if response.ok:
         graphs = response.json()
         return graphs
@@ -48,18 +31,10 @@ def get_graphs_data(endpoint: str, headers: dict) -> dict or None:
         return None
 
 
-def extract_and_show_graph_data(graphs_endpoint: str, headers: dict):
-    """
-    Extract and display graph data from the API response.
-
-    Args:
-        graphs_endpoint (str): The API endpoint URL for retrieving all graphs.
-        headers (dict): The request headers including authentication token.
-
-    Returns:
-        None
-    """
-    graphs_data = get_graphs_data(endpoint=graphs_endpoint, headers=headers)
+def extract_and_show_graph_data():
+    headers = get_headers()
+    endpoint = endpoints.graphs_endpoint
+    graphs_data = _get_graphs_data(endpoint, headers)
     if graphs_data is None:
         raise ValueError("graph data cannot be None")
     graphs = graphs_data['graphs']
@@ -69,7 +44,7 @@ def extract_and_show_graph_data(graphs_endpoint: str, headers: dict):
         graph_unit = graph['unit']
         graph_type = graph['type']
         graph_color = graph['color']
-        graph_url = get_graph_link(graphs_endpoint, graph_id)
+        graph_url = get_graph_link(endpoint, graph_id)
 
         print(f"Graph ID: {graph_id}")
         print(f"Graph Name: {graph_name}")
@@ -81,32 +56,14 @@ def extract_and_show_graph_data(graphs_endpoint: str, headers: dict):
 
 
 def get_graph_link(graphs_endpoint: str, graph_id: str) -> str:
-    """
-    Generate the URL for a specific graph.
-
-    Args:
-        graphs_endpoint (str): The base URL of the graph endpoints.
-        graph_id (str): The ID of the graph.
-
-    Returns:
-        str: The URL for the specific graph.
-    """
     return f'{graphs_endpoint}/{graph_id}.html'
 
 
-def delete_graph(graphs_endpoint: str, headers: dict):
-    """
-    Delete a graph on Pixela.
-
-    Args:
-        graphs_endpoint (str): The base URL of the graph endpoints.
-        headers (dict): The request headers including authentication token.
-
-    Returns:
-        None
-    """
+def delete_graph():
+    headers = get_headers()
+    endpoint = endpoints.graphs_endpoint
     graph_id = input('Provide graph id that you want to delete:> ')
-    delete_endpoint = f'{graphs_endpoint}/{graph_id}'
+    delete_endpoint = f'{endpoint}/{graph_id}'
     response = requests.delete(delete_endpoint, headers=headers)
     if not response.ok:
         print('Something went wrong')

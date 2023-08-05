@@ -74,6 +74,11 @@ pixels_interface = {
         'label': 'D',
         'description': 'Delete pixel',
         'callable': pixels.delete_pixel
+    },
+    'Q': {
+            'label': 'Q',
+            'description': 'Exit program',
+            'callable': exit_program
     }
 }
 

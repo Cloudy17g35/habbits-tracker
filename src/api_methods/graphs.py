@@ -36,7 +36,8 @@ def extract_and_show_graph_data():
     endpoint = endpoints.graphs_endpoint
     graphs_data = _get_graphs_data(endpoint, headers)
     if graphs_data is None:
-        raise ValueError("graph data cannot be None")
+        print("Graphs data wasn't fetched properly ")
+        return
     graphs = graphs_data['graphs']
     for graph in graphs:
         graph_id = graph['id']

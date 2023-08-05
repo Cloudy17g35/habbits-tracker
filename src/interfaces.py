@@ -1,5 +1,7 @@
-from src.api_methods import graphs, pixels
 import sys
+from typing import Iterable, Callable
+from src.api_methods import graphs, pixels
+
 
 def exit_program():
     sys.exit()
@@ -9,6 +11,24 @@ def show_interface(interface:dict):
     print('Here are possible methods')
     for method in interface.values():
         print(f'{method["label"]}: {method["description"]}')
+
+
+def prompt_user(valid_options:Iterable):
+    user_choice = input("Select option:> ").upper()
+    while user_choice not in valid_options:
+        user_choice = input("Select option:> ").upper()
+    return user_choice
+
+
+def call_function(function: Callable):
+    function()
+
+
+def show_interface_prompt_user_and_call_function(interface:dict):
+    show_interface(interface)
+    user_choice = prompt_user(interface)
+    function = interface[user_choice]['callable']
+    call_function(function)
 
 
 graphs_interface = {

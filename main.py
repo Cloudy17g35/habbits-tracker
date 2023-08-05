@@ -1,28 +1,22 @@
 from src import interfaces
-from typing import Iterable
+import os
 
-
-def prompt_user(valid_options:Iterable):
-    user_choice = input("Select option:> ").upper()
-    while user_choice not in valid_options:
-        user_choice = input("Select option:> ").upper()
-    return user_choice
+def clear_terminal():
+    os.system('clear')  # For macOS and Linux
+    # Alternatively, you can use 'cls' on Windows: os.system('cls')
 
 
 def main():
     while True:
+        clear_terminal()
         interfaces.show_interface(interfaces.main_interface)
-        user_choice = prompt_user(interfaces.main_interface.keys())
+        user_choice = interfaces.prompt_user(interfaces.main_interface.keys())
         if user_choice == 'G':
-            interfaces.show_interface(interfaces.graphs_interface)
-            user_choice = prompt_user(interfaces.graphs_interface.keys())
-            function_to_call = interfaces.graphs_interface[user_choice]['callable']
-            function_to_call()
+            interfaces.show_interface_prompt_user_and_call_function(interface=interfaces.graphs_interface)
+            input('PRESS ANY KEY TO BACK TO MAIN MENU')
         elif user_choice == 'P':
-            interfaces.show_interface(interfaces.pixels_interface)
-            user_choice = prompt_user(interfaces.pixels_interface.keys())
-            function_to_call = interfaces.pixels_interface[user_choice]['callable']
-            function_to_call()
+            interfaces.show_interface_prompt_user_and_call_function(interface=interfaces.pixels_interface)
+            input('PRESS ANY KEY TO BACK TO MAIN MENU')
         elif user_choice == 'Q':
             interfaces.exit_program()
 
